@@ -60,23 +60,23 @@ export async function POST(request: Request) {
         isAcceptingMessage: true,
         messages: [],
       });
-      if (!newUser) {
-        return Response.json(
-          {
-            success: false,
-            message: "Failed to create user",
-          },
-          { status: 500 }
-        );
-      } else {
-        Response.json(
-          {
-            success: true,
-            message: "User created successfully",
-          },
-          { status: 201 }
-        );
-      }
+      // if (!newUser) {
+      //   return Response.json(
+      //     {
+      //       success: false,
+      //       message: "Failed to create user",
+      //     },
+      //     { status: 500 }
+      //   );
+      // } else {
+      //   Response.json(
+      //     {
+      //       success: true,
+      //       message: "User created successfully",
+      //     },
+      //     { status: 201 }
+      //   );
+      // }
       // send verification email
       const emailResponse = await sendVerificationEmail(
         email,
