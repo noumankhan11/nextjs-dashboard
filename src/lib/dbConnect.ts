@@ -8,7 +8,7 @@ const connection: ConnectionObject = {};
 
 async function dbConnect(): Promise<void> {
   if (connection.isConnected) {
-    console.log("Already connected to the databse");
+    console.log("Already connected to the database");
     return;
   }
   try {
@@ -18,6 +18,7 @@ async function dbConnect(): Promise<void> {
     );
 
     connection.isConnected = db.connections[0].readyState;
+    console.log("Databse connected successfully!");
     // TODO: log db and db.connection
   } catch (error) {
     console.log("database connection failed error:", error);
