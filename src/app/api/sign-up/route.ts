@@ -8,11 +8,7 @@ export async function POST(request: Request) {
   await dbConnect();
   try {
     const { username, email, password } = await request.json();
-    const expiryDate = new Date();
-    expiryDate.setHours(expiryDate.getHours() + 1);
-    const verifyCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
+
     // existing vrified user
     const existingVerifiedUserByUsername = await UserModel.findOne({
       username,
@@ -29,6 +25,11 @@ export async function POST(request: Request) {
     }
 
     const existingUserByEmail = await UserModel.findOne({ email });
+    // OTP generation
+    const verifyCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    //
     if (existingUserByEmail) {
       if (existingUserByEmail.isVerified) {
         return Response.json(
@@ -50,7 +51,11 @@ export async function POST(request: Request) {
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const newUser = await UserModel.create({
+      // OTP expiration time
+      const expiryDate = new Date();
+      // creating new user
+      expiryDate.setHours(expiryDate.getHours() + 1);
+      const newUser = new UserModel({
         username,
         email,
         password: hashedPassword,
@@ -60,47 +65,48 @@ export async function POST(request: Request) {
         isAcceptingMessage: true,
         messages: [],
       });
-      // if (!newUser) {
-      //   return Response.json(
-      //     {
-      //       success: false,
-      //       message: "Failed to create user",
-      //     },
-      //     { status: 500 }
-      //   );
-      // } else {
-      //   Response.json(
-      //     {
-      //       success: true,
-      //       message: "User created successfully",
-      //     },
-      //     { status: 201 }
-      //   );
-      // }
-      // send verification email
-      const emailResponse = await sendVerificationEmail(
-        email,
-        username,
-        verifyCode
-      );
-      if (!emailResponse.success) {
-        return Response.json(
-          {
-            success: false,
-            message: emailResponse.message,
-          },
-          { status: 500 }
-        );
-      }
+      await newUser.save();
+    }
+    // if (!newUser) {
+    //   return Response.json(
+    //     {
+    //       success: false,
+    //       message: "Failed to create user",
+    //     },
+    //     { status: 500 }
+    //   );
+    // } else {
+    //   Response.json(
+    //     {
+    //       success: true,
+    //       message: "User created successfully",
+    //     },
+    //     { status: 201 }
+    //   );
+    // }
+    // send verification email
+    const emailResponse = await sendVerificationEmail(
+      email,
+      username,
+      verifyCode
+    );
+    if (!emailResponse.success) {
       return Response.json(
         {
-          success: true,
-          message:
-            "user registered successfully!! please verify you email",
+          success: false,
+          message: emailResponse.message,
         },
-        { status: 201 }
+        { status: 500 }
       );
     }
+    return Response.json(
+      {
+        success: true,
+        message:
+          "user registered successfully!! please verify your email",
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error registering user, error: ", error);
     return Response.json(
