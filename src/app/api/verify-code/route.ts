@@ -40,21 +40,23 @@ export async function POST(request: Request) {
           status: 200,
         }
       );
-    }else if(!isCodeNotExpired){
+    } else if (!isCodeNotExpired) {
       return Response.json(
         {
           succes: false,
-          message: "Verification code has expired! please signup again",
+          message:
+            "Verification code has expired! please signup again",
         },
         {
           status: 400,
         }
       );
-    }else{
+    } else {
       return Response.json(
         {
           succes: false,
-          message: "Verification code has expired! please signup again",
+          message:
+            "Verification code is not correct! please a valid code",
         },
         {
           status: 400,
