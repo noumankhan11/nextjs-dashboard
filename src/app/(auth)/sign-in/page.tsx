@@ -53,7 +53,7 @@ export default function page() {
         title: "Login successful",
         description: "User successfully signed in",
       });
-      router.push("/dashboard");
+      router.push("/");
     }
   };
   return (
@@ -109,7 +109,7 @@ export default function page() {
           <p>
             Donn't an account?{" "}
             <Link
-              href="/sign-un"
+              href="/sign-up"
               className="text-blue-600 hover:text-blue-800">
               Sign up
             </Link>
