@@ -63,7 +63,7 @@ export async function POST(request: Request) {
 // checking user messages acceptance status by a git method
 
 export async function GET(request: Request) {
-  await dbConnect;
+  await dbConnect();
 
   // Get the user session
   const session = await getServerSession(authOptions);
