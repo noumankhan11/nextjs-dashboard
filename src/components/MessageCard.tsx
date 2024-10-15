@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { X } from "lucide-react";
 
 import {
@@ -26,11 +26,12 @@ import { Button } from "./ui/button";
 
 import { ApiResponse } from "@/types/ApiResponse";
 import { useToast } from "@/hooks/use-toast";
-import { Message } from "postcss";
+import { Message } from "@/model/User.model";
 
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId: string) => void;
+  key: string;
 };
 
 export function MessageCard({
@@ -47,7 +48,7 @@ export function MessageCard({
       toast({
         title: response.data.message,
       });
-      onMessageDelete(message._id);
+      onMessageDelete(message._id as string);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -91,7 +92,7 @@ export function MessageCard({
           </AlertDialog>
         </div>
         <div className="text-sm">
-          {dayjs(message.createdAt).format("MMM D, YYYY h:mm A")}
+          {/* {dayjs(message.createdAt).format("MMM D, YYYY h:mm A")} */}
         </div>
       </CardHeader>
       <CardContent></CardContent>
